@@ -3,9 +3,15 @@
 #include "user/user.h"
 
 void backtrack(int read_fd) {
-    int fPrime;
-    int n = read(read_fd, &fPrime, sizeof fPrime);
-    if (n == 0) {
+    int fPrime = -1, prime;
+    while(read(read_fd, &prime, sizeof prime) > 0) {
+        if (fPrime == -1) {
+            fPrime = prime;
+            printf("prime %d\n", fPrime);
+        }
+        break;
+    }
+    if (fPrime == -1) {
         close(read_fd);
         exit(0);
         return;

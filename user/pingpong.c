@@ -21,11 +21,13 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
     else if (f == 0) {
-        close(p1[1]);
-        n = read(p1[0], buffer, sizeof buffer);
-        close(p1[0]);
         printf("%d: received ", getpid());
-        write(2, buffer, n);
+        close(p1[1]);
+        while((n = read(p1[0], buffer, sizeof buffer)) > 0) {
+            write(2, buffer, n);
+        }
+        close(p1[0]);
+        // write(2, buffer, n);
         close(p2[0]);
         write(p2[1], "pong\n", 5);
         close(p2[1]);
@@ -37,9 +39,10 @@ int main(int argc, char* argv[]) {
         close(p1[1]);
         wait(0);
         close(p2[1]);
-        n = read(p2[0], buffer, sizeof buffer);
-        close(p2[0]);
         printf("%d: received ", getpid());
-        write(2, buffer, n);
+        while((n = read(p2[0], buffer, sizeof buffer)) > 0) {
+            write(2, buffer, n);
+        }
+        close(p2[0]);
     }
 }
